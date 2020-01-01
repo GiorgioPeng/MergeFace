@@ -3,7 +3,7 @@ import Button from "@material-ui/core/Button";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-// import Camera from "./Camera";
+import Camera from "./Camera";
 import "./App.css";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -23,7 +23,9 @@ function App() {
     <div className={classes.root}>
       <Grid container spacing={2} justify="center">
         <Grid item xs={5}>
-          <Paper className={classes.paper}>上传照片或者拍照</Paper>
+          <Paper className={classes.paper}>
+            <Camera></Camera>
+          </Paper>
         </Grid>
         <Grid item xs={2}>
           <Paper className={classes.paper}>+</Paper>
