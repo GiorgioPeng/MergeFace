@@ -1,5 +1,4 @@
 import React from "react";
-import { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles(theme => ({
@@ -20,8 +19,8 @@ const useStyles = makeStyles(theme => ({
     display: "none"
   }
 }));
-export default function() {
-  const [imgData, setImgData] = useState("");
+export default function(props) {
+  const { selfImgData, setSelfImgData } = props;
   const takePhoto = () => {
     const constraints = { audio: true, video: { width: 200, height: 250 } };
     navigator.mediaDevices
@@ -38,7 +37,8 @@ export default function() {
         document.querySelector(".shot").onclick = () => {
           video.pause();
           canvas.getContext("2d").drawImage(video, 0, 0, 200, 250);
-          setImgData(canvas.toDataURL("image/png"));
+          console.log(canvas.toDataURL("image/jpeg"));
+          setSelfImgData(canvas.toDataURL("image/jpeg"));
         };
       });
   };
