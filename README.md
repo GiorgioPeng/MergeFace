@@ -8,7 +8,10 @@
 - 一张自拍
 - 一张模板
 - 你的 face++ api_key
-- 你的 face++ api_secret
+- 你的 face++ api_secret  
+
+> 没有face++?  
+> [这里是注册地址](https://console.faceplusplus.com.cn/register)
 
 ### 步骤
 
