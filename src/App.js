@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Camera from "./Camera";
+import Module from "./Module";
 import "./App.css";
 const useStyles = makeStyles(theme => ({
   root: {
@@ -27,10 +28,16 @@ function App() {
           </Paper>
         </Grid>
         <Grid item xs={2}>
-          <Button>+</Button>
+          <Paper className={classes.paper}>
+            <Button style={{ width: "100%", height: "100%", fontSize: "20px" }}>
+              +
+            </Button>
+          </Paper>
         </Grid>
         <Grid item xs={5}>
-          <Paper className={classes.paper}>模板图</Paper>
+          <Paper className={classes.paper}>
+            <Module></Module>
+          </Paper>
         </Grid>
         <Grid item xs={10}>
           <Paper className={classes.paper}>结果图</Paper>

@@ -8,13 +8,16 @@ const useStyles = makeStyles(theme => ({
     height: "300px",
     width: "100%",
     alignItem: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    border: "1px solid grey",
+    marginBottom: "5px"
   },
   selfImg: {
-    marginTop: "25px",
-    marginBottom: "25px",
-    height: "250px",
-    width: "200px"
+    // marginTop: "25px",
+    // marginBottom: "25px",
+    // height: "250px",
+    // width: "200px",
+    display: "none"
   }
 }));
 export default function() {
@@ -32,14 +35,14 @@ export default function() {
         };
 
         let canvas = document.getElementById("canvas");
-        document.querySelector("button").onclick = () => {
+        document.querySelector(".shot").onclick = () => {
           video.pause();
           canvas.getContext("2d").drawImage(video, 0, 0, 200, 250);
           setImgData(canvas.toDataURL("image/png"));
         };
       });
   };
-  useEffect(takePhoto, []);
+  // useEffect(takePhoto, []);
   const classes = useStyles();
   return (
     <div>
@@ -52,16 +55,20 @@ export default function() {
           height="250"
         ></canvas>
       </div>
-      <Button variant="contained" color="primary" className={classes.shot}>
-        拍照
-      </Button>
       <Button
         variant="contained"
         color="secondary"
         className={classes.reShot}
-        onClick={() => document.querySelector("video").play()}
+        onClick={takePhoto}
       >
-        重拍
+        重拍/打开摄像头
+      </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        className={(classes.shot, "shot")}
+      >
+        拍照
       </Button>
     </div>
   );
