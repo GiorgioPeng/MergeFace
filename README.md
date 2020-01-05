@@ -10,6 +10,7 @@
 - 你的 face++ api_key
 - 你的 face++ api_secret  
 
+> :trollface:因为是纯前端项目,避免被恶意使用,因此需要使用者自己的face++账号的秘钥对  
 > 没有face++?  
 > [这里是注册地址](https://console.faceplusplus.com.cn/register)
 
