@@ -1,6 +1,8 @@
 import React from "react";
+import { useRef, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
+import Upload from "../Upload";
 const useStyles = makeStyles(theme => ({
   selfPhoto: {
     display: "flex",
@@ -11,55 +13,84 @@ const useStyles = makeStyles(theme => ({
     border: "1px solid grey",
     marginBottom: "5px"
   },
-  selfImg: {
-    // marginTop: "25px",
-    // marginBottom: "25px",
-    // height: "250px",
-    // width: "200px",
-    display: "none"
+  bottomUpload: {
+    display: "flex",
+    width: "100%",
+    justifyContent: "center",
+    marginTop: "5px",
+    alignItems: "center"
   }
 }));
 export default function(props) {
   const { selfImgData, setSelfImgData } = props;
-  const takePhoto = () => {
+  const openCamera = () => {
     const constraints = { audio: true, video: { width: 200, height: 250 } };
     navigator.mediaDevices
       .getUserMedia(constraints)
       .then(function(mediaStream) {
         console.log("getUserMedia:", mediaStream);
-        let video = document.querySelector("video");
-        video.srcObject = mediaStream;
-        video.onloadedmetadata = function(e) {
-          video.play();
-        };
+        videoRef.current.srcObject = mediaStream;
+        videoRef.current.onloadedmetadata = function(e) {
+          videoRef.current.play();
+        }; //开始录像
+        videoRef.current.addEventListener("timeupdate", function() {
+          canvasRef.current
+            .getContext("2d")
+            .drawImage(videoRef.current, 0, 0, 200, 250);
+        }); //实时绘图
 
-        let canvas = document.getElementById("canvas");
         document.querySelector(".shot").onclick = () => {
-          video.pause();
-          canvas.getContext("2d").drawImage(video, 0, 0, 200, 250);
-          console.log(canvas.toDataURL("image/jpeg"));
-          setSelfImgData(canvas.toDataURL("image/jpeg"));
-        };
+          videoRef.current.pause();
+          setSelfImgData(canvasRef.current.toDataURL("image/jpeg"));
+        }; //拍照
       });
   };
-  // useEffect(takePhoto, []);
+  const takePhoto = () => {
+    console.log(videoRef.current.srcObject);
+    if (videoRef.current.srcObject !== null) {
+      videoRef.current.pause();
+      setSelfImgData(canvasRef.current.toDataURL("image/jpeg"));
+      //拍照
+    }
+  };
+  const reDraw = () => {
+    console.log("re-draw");
+    let newImg = new Image();
+    newImg.src = selfImgData;
+
+    newImg.onload = () => {
+      canvasRef.current.getContext("2d").drawImage(newImg, 0, 0, 200, 250);
+    };
+    //重绘方法
+  };
+  const previewImg = () => {
+    if (videoRef.current.srcObject !== null) {
+      videoRef.current.pause();
+    }
+    let fileReader = new FileReader();
+    console.log(fileRef.current.files[0].size);
+    fileReader.readAsDataURL(fileRef.current.files[0]);
+    fileReader.onload = () => {
+      setSelfImgData(fileReader.result);
+    };
+    //预览图
+  };
+  const fileRef = useRef();
+  const videoRef = useRef();
+  const canvasRef = useRef();
   const classes = useStyles();
+  useEffect(reDraw, [selfImgData]); //重绘图
   return (
     <div>
       <div className={classes.selfPhoto}>
-        <video src=""></video>
-        <canvas
-          id="canvas"
-          className={classes.selfImg}
-          width="200"
-          height="250"
-        ></canvas>
+        <video src="" style={{ display: "none" }} ref={videoRef}></video>
+        <canvas id="canvas" width="200" height="250" ref={canvasRef}></canvas>
       </div>
       <Button
         variant="contained"
         color="secondary"
         className={classes.reShot}
-        onClick={takePhoto}
+        onClick={openCamera}
       >
         重拍/打开摄像头
       </Button>
@@ -67,9 +98,14 @@ export default function(props) {
         variant="contained"
         color="primary"
         className={(classes.shot, "shot")}
+        onClick={takePhoto}
       >
         拍照
       </Button>
+      <div className={classes.bottomUpload}>
+        <span style={{ fontSize: "10px", color: "red" }}>也可以上传图片哦</span>
+        <Upload fileRef={fileRef} previewImg={previewImg}></Upload>
+      </div>
     </div>
   );
 }

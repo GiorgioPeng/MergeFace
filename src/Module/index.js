@@ -1,7 +1,7 @@
 import React from "react";
 import { useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
+import Upload from "../Upload/index.js";
 const useStyles = makeStyles(theme => ({
   module: {
     display: "flex",
@@ -58,18 +58,7 @@ export default function(props) {
           src={uploadImgData}
         ></img>
       </div>
-      <div className={classes.uploadDiv}>
-        <Button variant="contained" color="primary">
-          点击上传
-        </Button>
-        <input
-          ref={fileRef}
-          type="file"
-          accept="image/*"
-          className={classes.uploadFileInput}
-          onChange={previewImg}
-        ></input>
-      </div>
+      <Upload fileRef={fileRef} previewImg={previewImg}></Upload>
     </div>
   );
 }
