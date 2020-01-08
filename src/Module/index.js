@@ -1,5 +1,5 @@
 import React from "react";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Upload from "../Upload/index.js";
 const useStyles = makeStyles(theme => ({
@@ -38,6 +38,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 export default function(props) {
+  const classes = useStyles();
+  const fileRef = useRef();
+  const imgRef = useRef();
+  const { uploadImgData, setUploadImgData } = props;
   const previewImg = () => {
     console.log(fileRef.current.files[0]);
     let fileReader = new FileReader();
@@ -46,9 +50,23 @@ export default function(props) {
       setUploadImgData(fileReader.result);
     };
   };
-  const classes = useStyles();
-  const fileRef = useRef();
-  const { uploadImgData, setUploadImgData } = props;
+  const reDraw = () => {
+    if (fileRef.current.files[0] && fileRef.current.files[0].size) {
+      let canvas = document.createElement("canvas");
+      canvas.width = 200;
+      canvas.height = 250;
+      canvas.getContext("2d").drawImage(imgRef.current, 0, 0, 200, 250);
+      setUploadImgData(
+        canvas.toDataURL(
+          "image/jpeg",
+          fileRef.current.files[0].size > 1900000
+            ? 1900000 / fileRef.current.files[0].size
+            : 1
+        )
+      ); //压缩图片
+    }
+  };
+  useEffect(reDraw, [uploadImgData]);
   return (
     <div className={classes.module}>
       <div className={classes.moduleImg}>
@@ -56,6 +74,7 @@ export default function(props) {
           className={classes.uploadImg}
           alt="模板照片"
           src={uploadImgData}
+          ref={imgRef}
         ></img>
       </div>
       <Upload fileRef={fileRef} previewImg={previewImg}></Upload>

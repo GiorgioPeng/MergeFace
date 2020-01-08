@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useRef } from "react";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import $ from "jquery";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
@@ -24,6 +25,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 function App() {
+  const classes = useStyles();
+  const [selfImgData, setSelfImgData] = useState();
+  const [uploadImgData, setUploadImgData] = useState();
+  const [resultImgData, setResultImgData] = useState();
+  const api_keyRef = useRef();
+  const api_secretRef = useRef();
+  const match = useMediaQuery("(max-width:600px)");
   const getResultImg = () => {
     let formData = new FormData();
     formData.append("api_key", api_keyRef.current.value);
@@ -55,16 +63,10 @@ function App() {
       }
     });
   };
-  const classes = useStyles();
-  const [selfImgData, setSelfImgData] = useState();
-  const [uploadImgData, setUploadImgData] = useState();
-  const [resultImgData, setResultImgData] = useState();
-  const api_keyRef = useRef();
-  const api_secretRef = useRef();
   return (
     <div className={classes.root}>
-      <Grid container spacing={2} justify="center">
-        <Grid item xs={5}>
+      <Grid container spacing={1} justify="center">
+        <Grid item xs={match ? 12 : 5}>
           <Paper className={classes.paper}>
             <Camera
               selfImgData={selfImgData}
@@ -72,10 +74,13 @@ function App() {
             ></Camera>
           </Paper>
         </Grid>
-        <Grid item xs={2}>
+        <Grid item xs={match ? 12 : 2}>
           <Paper
             className={classes.paper}
-            style={{ backgroundColor: "pink", transform: "translateY(80px)" }}
+            style={{
+              backgroundColor: "pink",
+              transform: match ? "" : "translateY(80px)"
+            }}
           >
             <TextField
               required
@@ -104,7 +109,7 @@ function App() {
             </Button>
           </Paper>
         </Grid>
-        <Grid item xs={5}>
+        <Grid item xs={match ? 12 : 5}>
           <Paper className={classes.paper}>
             <Module
               uploadImgData={uploadImgData}
@@ -112,7 +117,7 @@ function App() {
             ></Module>
           </Paper>
         </Grid>
-        <Grid item xs={10}>
+        <Grid item xs={match ? 12 : 10}>
           <Paper className={classes.paper}>
             <img
               alt="结果图"

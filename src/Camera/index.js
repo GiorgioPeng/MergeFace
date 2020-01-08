@@ -23,6 +23,10 @@ const useStyles = makeStyles(theme => ({
 }));
 export default function(props) {
   const { selfImgData, setSelfImgData } = props;
+  const fileRef = useRef();
+  const videoRef = useRef();
+  const canvasRef = useRef();
+  const classes = useStyles();
   const openCamera = () => {
     const constraints = { audio: true, video: { width: 200, height: 250 } };
     navigator.mediaDevices
@@ -54,31 +58,37 @@ export default function(props) {
     }
   };
   const reDraw = () => {
-    console.log("re-draw");
-    let newImg = new Image();
-    newImg.src = selfImgData;
+    if (fileRef.current.files[0] && fileRef.current.files[0].size) {
+      console.log("re-draw");
+      let newImg = new Image();
+      newImg.src = selfImgData;
 
-    newImg.onload = () => {
-      canvasRef.current.getContext("2d").drawImage(newImg, 0, 0, 200, 250);
-    };
-    //重绘方法
+      newImg.onload = () => {
+        canvasRef.current.getContext("2d").drawImage(newImg, 0, 0, 200, 250);
+        setSelfImgData(
+          canvasRef.current.toDataURL(
+            "image/jpeg",
+            fileRef.current.files[0].size > 1900000
+              ? 1900000 / fileRef.current.files[0].size
+              : 1
+          )
+        ); //压缩图片重新赋值
+      };
+      //重绘方法
+    }
   };
   const previewImg = () => {
     if (videoRef.current.srcObject !== null) {
       videoRef.current.pause();
     }
     let fileReader = new FileReader();
-    console.log(fileRef.current.files[0].size);
     fileReader.readAsDataURL(fileRef.current.files[0]);
     fileReader.onload = () => {
       setSelfImgData(fileReader.result);
     };
+
     //预览图
   };
-  const fileRef = useRef();
-  const videoRef = useRef();
-  const canvasRef = useRef();
-  const classes = useStyles();
   useEffect(reDraw, [selfImgData]); //重绘图
   return (
     <div>
