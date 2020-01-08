@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 export default function(props) {
-  const { selfImgData, setSelfImgData } = props;
+  const { matchScreen, selfImgData, setSelfImgData } = props;
   const fileRef = useRef();
   const videoRef = useRef();
   const canvasRef = useRef();
@@ -62,7 +62,7 @@ export default function(props) {
       console.log("re-draw");
       let newImg = new Image();
       newImg.src = selfImgData;
-
+      newImg.style.transform = matchScreen ? "rotate(90deg)" : "";
       newImg.onload = () => {
         canvasRef.current.getContext("2d").drawImage(newImg, 0, 0, 200, 250);
         setSelfImgData(

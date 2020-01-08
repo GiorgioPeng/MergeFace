@@ -69,6 +69,7 @@ function App() {
         <Grid item xs={match ? 12 : 5}>
           <Paper className={classes.paper}>
             <Camera
+              matchScreen={match}
               selfImgData={selfImgData}
               setSelfImgData={setSelfImgData}
             ></Camera>
@@ -112,6 +113,7 @@ function App() {
         <Grid item xs={match ? 12 : 5}>
           <Paper className={classes.paper}>
             <Module
+              matchScreen={match}
               uploadImgData={uploadImgData}
               setUploadImgData={setUploadImgData}
             ></Module>
@@ -127,7 +129,6 @@ function App() {
           </Paper>
         </Grid>
       </Grid>
-      {/*<Camera></Camera>*/}
     </div>
   );
 }
