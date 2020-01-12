@@ -43,10 +43,10 @@ export default function(props) {
             .drawImage(videoRef.current, 0, 0, 200, 250);
         }); //实时绘图
 
-        document.querySelector(".shot").onclick = () => {
-          videoRef.current.pause();
-          setSelfImgData(canvasRef.current.toDataURL("image/jpeg"));
-        }; //拍照
+        // document.querySelector(".shot").onclick = () => {
+        //   videoRef.current.pause();
+        //   setSelfImgData(canvasRef.current.toDataURL("image/jpeg"));
+        // }; //拍照
       });
   };
   const takePhoto = () => {
