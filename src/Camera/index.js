@@ -1,6 +1,7 @@
 import React from "react";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import Button from "@material-ui/core/Button";
+import Dialog from "./Dialog";
 import { makeStyles } from "@material-ui/core/styles";
 import Upload from "../Upload";
 const useStyles = makeStyles(theme => ({
@@ -23,31 +24,33 @@ const useStyles = makeStyles(theme => ({
 }));
 export default function(props) {
   const { matchScreen, selfImgData, setSelfImgData } = props;
+  const [dialogOpen, setDialogOpen] = useState(false);
   const fileRef = useRef();
   const videoRef = useRef();
   const canvasRef = useRef();
   const classes = useStyles();
   const openCamera = () => {
     const constraints = { audio: true, video: { width: 200, height: 250 } };
-    navigator.mediaDevices
-      .getUserMedia(constraints)
-      .then(function(mediaStream) {
-        console.log("getUserMedia:", mediaStream);
-        videoRef.current.srcObject = mediaStream;
-        videoRef.current.onloadedmetadata = function(e) {
-          videoRef.current.play();
-        }; //开始录像
-        videoRef.current.addEventListener("timeupdate", function() {
-          canvasRef.current
-            .getContext("2d")
-            .drawImage(videoRef.current, 0, 0, 200, 250);
-        }); //实时绘图
-
-        // document.querySelector(".shot").onclick = () => {
-        //   videoRef.current.pause();
-        //   setSelfImgData(canvasRef.current.toDataURL("image/jpeg"));
-        // }; //拍照
-      });
+    if (navigator.mediaDevices) {
+      navigator.mediaDevices
+        .getUserMedia(constraints)
+        .then(function(mediaStream) {
+          console.log("getUserMedia:", mediaStream);
+          videoRef.current.srcObject = mediaStream;
+          videoRef.current.onloadedmetadata = function(e) {
+            videoRef.current.play();
+          }; //开始录像
+          videoRef.current.addEventListener("timeupdate", function() {
+            canvasRef.current
+              .getContext("2d")
+              .drawImage(videoRef.current, 0, 0, 200, 250);
+          }); //实时绘图
+        });
+    } //如果打开是以localhost, file:///, 或者https协议打开,则能够打开摄像头,不需要处理错误逻辑
+    else {
+      //如果是以http协议打开,则不能调用出摄像头
+      setDialogOpen(true);
+    }
   };
   const takePhoto = () => {
     console.log(videoRef.current.srcObject);
@@ -107,7 +110,7 @@ export default function(props) {
       <Button
         variant="contained"
         color="primary"
-        className={(classes.shot, "shot")}
+        className={classes.shot}
         onClick={takePhoto}
       >
         拍照
@@ -116,6 +119,11 @@ export default function(props) {
         <span style={{ fontSize: "10px", color: "red" }}>也可以上传图片哦</span>
         <Upload fileRef={fileRef} previewImg={previewImg}></Upload>
       </div>
+      <Dialog
+        openAttribute={dialogOpen}
+        closeFunction={() => setDialogOpen(false)}
+        matchScreen={matchScreen}
+      ></Dialog>
     </div>
   );
 }
