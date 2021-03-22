@@ -1,6 +1,6 @@
 ## 这是一个使用 face++ 接口实现人脸融合的在线项目
 
-[在线使用](https://giorgiopeng.space/MergeFace/)
+[在线使用](https://giorgiopeng.github.io/MergeFace/)
 ---
 
 ### 需要什么？
